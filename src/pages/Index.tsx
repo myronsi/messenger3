@@ -1,14 +1,32 @@
-// Update this page (the content is just a fallback if you fail to update the page)
 
-const Index = () => {
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { Spinner } from "@/components/ui/spinner";
+
+/**
+ * Index page that redirects users based on authentication status
+ * - Authenticated users go to /chat
+ * - Non-authenticated users go to /login
+ */
+export default function Index() {
+  const { isAuthenticated, isLoading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoading) {
+      if (isAuthenticated) {
+        navigate("/chat");
+      } else {
+        navigate("/login");
+      }
+    }
+  }, [isAuthenticated, isLoading, navigate]);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="flex h-screen w-full items-center justify-center">
+      <Spinner className="h-10 w-10" />
+      <span className="ml-4 text-lg text-gray-600">Загрузка...</span>
     </div>
   );
-};
-
-export default Index;
+}
