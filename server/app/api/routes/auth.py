@@ -44,7 +44,7 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)):
     db.refresh(db_user)
     
     # Create access token
-    access_token_expires = timedelta(minutes=settings.jwt_token_expire_minutes)
+    access_token_expires = timedelta(minutes=settings.access_token_expire_minutes)
     access_token = create_access_token(
         data={"sub": str(db_user.id)},
         expires_delta=access_token_expires
@@ -71,7 +71,7 @@ def login(
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    access_token_expires = timedelta(minutes=settings.jwt_token_expire_minutes)
+    access_token_expires = timedelta(minutes=settings.access_token_expire_minutes)
     access_token = create_access_token(
         data={"sub": str(user.id)},
         expires_delta=access_token_expires
@@ -82,7 +82,7 @@ def login(
         key="token",
         value=access_token,
         httponly=True,
-        max_age=settings.jwt_token_expire_minutes * 60,
+        max_age=settings.access_token_expire_minutes * 60,
         samesite="lax",
         secure=settings.environment != "development"
     )

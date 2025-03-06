@@ -16,7 +16,7 @@ class ChatParticipantResponse(ChatParticipantBase):
     joined_at: datetime
     
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ChatBase(BaseModel):
     name: Optional[str] = None
@@ -36,4 +36,4 @@ class ChatResponse(ChatBase):
     unread_count: int = 0
     
     class Config:
-        orm_mode = True
+        from_attributes = True

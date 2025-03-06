@@ -20,7 +20,7 @@ class UserResponse(UserBase):
     created_at: datetime
     
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class UserInDB(UserBase):
     id: int
@@ -30,4 +30,4 @@ class UserInDB(UserBase):
     updated_at: Optional[datetime] = None
     
     class Config:
-        orm_mode = True
+        from_attributes = True

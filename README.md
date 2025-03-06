@@ -66,7 +66,7 @@ pip install -r requirements.txt
 5. Set up environment variables (optional):
    Create a `.env` file in the server directory with the following content:
    ```
-   JWT_SECRET_KEY=your_secret_key_here
+   secret_key=your_secret_key_here
    ENVIRONMENT=development
    ```
 
