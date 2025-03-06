@@ -5,12 +5,12 @@ A modern real-time messaging application built with React, TypeScript, FastAPI, 
 
 ## Features
 
-- 🔄 Real-time messaging with WebSockets
-- 🔐 Secure authentication with JWT tokens
-- 👥 User search and chat creation
-- 📱 Responsive design for all devices
-- 🔔 Online status indicators
-- 🗄️ Message history persistence
+- Real-time messaging with WebSockets
+- Secure authentication with JWT tokens
+- User search and chat creation
+- Responsive design for all devices
+- Online status indicators
+- Message history persistence
 
 ## Technology Stack
 
