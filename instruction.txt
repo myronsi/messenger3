@@ -1,0 +1,12 @@
+server:
+
+cd messenger3/server
+python -m venv venv
+source venv/bin/activate
+uvicorn main:app --reload
+
+
+client: 
+
+cd messenger3/client
+npm run dev
