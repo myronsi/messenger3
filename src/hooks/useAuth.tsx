@@ -1,6 +1,7 @@
 
 import { useState, useEffect, useCallback, useContext, createContext, ReactNode } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { getCookie } from "../../client/src/contexts/ChatContext"
 
 interface User {
   id: number;
@@ -25,7 +26,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
   
   const loadUser = useCallback(async () => {
-    const token = localStorage.getItem("token");
+    const token = getCookie('token') || '';
     
     if (!token) {
       setIsLoading(false);

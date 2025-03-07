@@ -40,6 +40,12 @@ interface ChatContextType {
   fetchHistory: (chatId: number, page?: number) => Promise<void>;
 }
 
+export const getCookie = (name: string) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  return parts.length === 2 ? parts.pop()?.split(';').shift() : null;
+};
+
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -55,9 +61,15 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Set up WebSocket connection
   const setupWebSocket = useCallback(() => {
-    if (!isAuthenticated || !user) return;
+    const token = getCookie('token');
+    console.log('WebSocket token:', token); // Добавляем лог для отладки
 
-    const ws = new WebSocket(`${WS_URL}/ws?token=${encodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, "$1"))}`);
+    if (!token) {
+      console.error('WebSocket: No auth token available');
+      return;
+    }
+
+    const ws = new WebSocket(`${WS_URL}/ws?token=${encodeURIComponent(token)}`);
     
     ws.onopen = () => {
       console.log('WebSocket connected');
@@ -126,23 +138,31 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const cleanup = setupWebSocket();
       return cleanup;
     }
-  }, [isAuthenticated, setupWebSocket]);
+  }, [isAuthenticated, setupWebSocket, user]); // Добавляем user в зависимости
 
   const fetchChats = async () => {
     if (!isAuthenticated) return;
     
     setIsLoading(true);
     try {
+      const token = getCookie('token'); // Добавляем проверку токена
+      if (!token) throw new Error('Authentication token is missing');
+  
       const response = await fetch(`${API_URL}/chats`, {
-        credentials: 'include',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        // credentials: 'include' // Убираем если используем Bearer
       });
       
-      if (!response.ok) throw new Error('Failed to fetch chats');
-      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to fetch chats');
+      }      
       const data = await response.json();
       setChats(data);
     } catch (error) {
-      console.error('Error fetching chats:', error);
+      console.error('Error details:', error); // Улучшенное логирование
     } finally {
       setIsLoading(false);
     }

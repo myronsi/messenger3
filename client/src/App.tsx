@@ -1,6 +1,6 @@
-
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
+import { ChatProvider } from './contexts/ChatContext'; // Добавьте импорт
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Chat from './pages/Chat';
@@ -20,21 +20,23 @@ function App() {
   return (
     <>
       <Toaster />
-      <Routes>
-        <Route 
-          path="/" 
-          element={isAuthenticated ? <Chat /> : <Navigate to="/login" />} 
-        />
-        <Route 
-          path="/login" 
-          element={!isAuthenticated ? <Login /> : <Navigate to="/" />} 
-        />
-        <Route 
-          path="/register" 
-          element={!isAuthenticated ? <Register /> : <Navigate to="/" />} 
-        />
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+      <ChatProvider>
+        <Routes>
+          <Route 
+            path="/" 
+            element={isAuthenticated ? <Chat /> : <Navigate to="/login" />} 
+          />
+          <Route 
+            path="/login" 
+            element={!isAuthenticated ? <Login /> : <Navigate to="/" />} 
+          />
+          <Route 
+            path="/register" 
+            element={!isAuthenticated ? <Register /> : <Navigate to="/" />} 
+          />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </ChatProvider>
     </>
   );
 }
