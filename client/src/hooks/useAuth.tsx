@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useCallback, useContext, createContext, ReactNode } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { getCookie } from "../../client/src/contexts/ChatContext"
+import { useToast } from "./use-toast";
+import { getCookie } from "../contexts/ChatContext";
 
 interface User {
   id: number;
