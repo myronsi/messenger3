@@ -14,7 +14,6 @@ export function useUserSearch() {
   const [results, setResults] = useState<UserSearchResult[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
-  const { user } = useAuth();
   const { toast } = useToast();
   const abortControllerRef = useRef<AbortController | null>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -83,13 +82,7 @@ export function useUserSearch() {
       }
 
       const data = await response.json();
-      
-      // Filter out the current user
-      const filteredResults = data.filter((user: UserSearchResult) => 
-        user.id !== user?.id
-      );
-      
-      setResults(filteredResults);
+      setResults(data);
     } catch (error) {
       if (error instanceof Error && error.name !== "AbortError") {
         console.error("Search error:", error);
@@ -119,7 +112,7 @@ export function useUserSearch() {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (results.length === 0) return;
+    if (results.length === 0) return null;
 
     switch (e.key) {
       case "ArrowDown":

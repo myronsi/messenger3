@@ -1,5 +1,5 @@
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from typing import List
 from app.core.auth import get_current_user, get_password_hash
@@ -74,18 +74,19 @@ def update_user(
 
 @router.get("/search/", response_model=List[UserResponse])
 def search_users(
-    query: str,
+    query: str = Query(..., min_length=2, max_length=50),
+    limit: int = Query(10, ge=1, le=50),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """Search users by username or email"""
-    if not query or len(query) < 3:
-        raise HTTPException(status_code=400, detail="Search query must be at least 3 characters")
+    if not query or len(query) < 2:
+        raise HTTPException(status_code=400, detail="Search query must be at least 2 characters")
     
     # Search users by username or email (case insensitive)
     users = db.query(User).filter(
         (User.username.ilike(f"%{query}%")) | 
         (User.email.ilike(f"%{query}%"))
-    ).all()
+    ).filter(User.id != current_user.id).limit(limit).all()
     
     return users
