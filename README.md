@@ -62,6 +62,9 @@ python -m venv venv
 ```bash
 pip install -r requirements.txt
 ```
+```bash
+pip install jwt
+```
 
 5. Set up environment variables (optional):
    Create a `.env` file in the server directory with the following content:
